@@ -1,12 +1,11 @@
 # EZ-PD&trade; PMG1 MCU: 12-bit SAR ADC basic
 
-This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&trade; PMG1-S3 MCU and EZ-PD&trade; PMG1-B1 MCU to read the input voltage applied in both differential and single-ended modes and to display the measured voltage and corresponding output codes in signed/unsigned format. It also explains the configuration of PASS 0 12-bit SAR ADC 0 using the Device Configurator on ModusToolbox&trade; software.
+This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&trade; PMG1-S3 and EZ-PD&trade; PMG1-B1 MCUs to read the input voltage applied in both differential and single-ended modes and display the measured voltage and corresponding output codes in signed or unsigned format. It also explains the configuration of PASS 0 12-bit SAR ADC 0 using the Device Configurator on ModusToolbox&trade;.
 
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-pmg1-12-bit-saradc-basic)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzQ2NDkiLCJTcGVjIE51bWJlciI6IjAwMi0zNDY0OSIsIkRvYyBUaXRsZSI6IkVaLVBEJnRyYWRlOyBQTUcxIE1DVTogMTItYml0IFNBUiBBREMgYmFzaWMiLCJyaWQiOiJlYXNvdmFyZ2hlc2UiLCJEb2MgdmVyc2lvbiI6IjIuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IldJUkVEIiwiRG9jIEZhbWlseSI6IlRZUEUtQyJ9)
-
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzQ2NDkiLCJTcGVjIE51bWJlciI6IjAwMi0zNDY0OSIsIkRvYyBUaXRsZSI6IkVaLVBEJnRyYWRlOyBQTUcxIE1DVTogMTItYml0IFNBUiBBREMgYmFzaWMiLCJyaWQiOiJlYXNvdmFyZ2hlc2UiLCJEb2MgdmVyc2lvbiI6IjIuMi4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IldJUkVEIiwiRG9jIEZhbWlseSI6IlRZUEUtQyJ9)
 
 
 ## Requirements
@@ -14,7 +13,9 @@ This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&t
 - [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.0 or later (tested with v3.0)
 - Board support package (BSP) minimum required version: 3.0.0
 - Programming language: C
-- Associated parts: [EZ-PD&trade; PMG1 MCU](https://www.infineon.com/PMG1)
+- Associated parts: [EZ-PD&trade; PMG1_S3, PMG1-B1, EVAL_PMG1-S3_DUALDRP MCU](https://www.infineon.com/PMG1)
+
+
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
@@ -22,10 +23,16 @@ This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&t
 - Arm&reg; Compiler v6.13 (`ARM`)
 - IAR C/C++ Compiler v8.42.2 (`IAR`)
 
+
+
 ## Supported kits (make variable 'TARGET')
 
 - [EZ-PD&trade; PMG1-S3 Prototyping Kit](https://www.infineon.com/CY7113) (`PMG1-CY7113`) – Default value of `TARGET`
 - [EZ-PD&trade; PMG1-B1 Prototyping Kit](https://www.infineon.com/EVAL_PMG1_B1_DRP) (`EVAL_PMG1_B1_DRP`)
+- [EZ-PD&trade; EVAL_PMG1-S3_DUALDRP Prototyping Kit](https://www.infineon.com/EVAL_PMG1_S3_DUALDRP) (`EVAL_PMG1_S3_DUALDRP`)
+
+
+
 
 ## Hardware setup
 
@@ -33,11 +40,12 @@ This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&t
 
 2. Connect the USB PD port (J10) to a USB-C power adapter/USB port on PC using a Type-C/Type-A to Type-C cable to power the PMG1 device for normal operation.
 
-3. For PMG1-S3 kits of **revision 3 or lower**, connect the UART Tx (J6.10) and UART Rx (J6.9) lines from the PMG1 kit to J3.8 and J3.10 on KitProg3 respectively to establish a UART connection between KitProg3 and the PMG1 device. Kits with a higher revision have UART lines internally connected and therefore, external wiring is not required. For EVAL_PMG1_B1_DRP kit, change SW5 to 1-2 position and SW4 to 1-2 position to establish a UART connection between KitProg3 and the PMG1 device.
+3. For PMG1-S3 kits revision 3 or lower, connect the UART Tx (J6.10) and UART Rx (J6.9) lines from the PMG1 kit to J3.8 and J3.10 on KitProg3 respectively to establish a UART connection between KitProg3 and the PMG1 device. Kits with a higher revision have UART lines internally connected and therefore, external wiring is not required. For EVAL_PMG1_B1_DRP kit, change SW5 to 1-2 position and SW4 to 1-2 position to establish a UART connection between KitProg3 and the PMG1 device.
 
-4. By default, the ADC is configured to read differential input voltage applied across the **Vplus (P3.0 (J6.12))** and **Vminus (P3.3 (J6.11))** pins of PASS0 SARADC0 for PMG1-S3 kit and **Vplus (P3.0 (J7.7))** and **Vminus (P3.1 (J7.6))** pins of PASS0 SARADC0 for EVAL_PMG1_B1_DRP kit.
 
-5. Do the following hardware connection for Differential mode (Signed and Unsigned). Refer Figure 1 and Table 1 for the PMG1-S3 kit connections and Table 1 for EVAL_PMG1_B1_DRP kit connections.
+4. By default, the ADC is configured to read differential input voltage applied across Vplus (P3.0 (J6.12)) and Vminus (P3.3 (J6.11)) pins of PASS0 SARADC0 for the PMG1-S3 kit, across Vplus (P3.0 (J13.3)) and Vminus P3.3 (J13.1) pins of PASS0 SARADC0 for the EVAL_PMG1-S3_DUALDRP kit, and Vplus (P3.0 (J7.7)) and Vminus (P3.1 (J7.6)) pins of PASS0 SARADC0 for the EVAL_PMG1_B1_DRP kit.
+
+5. Do the following hardware connection for differential mode (signed and unsigned). See **Figure 1** and **Table 1** for the PMG1-S3 kit connections and **Table 1** for the EVAL_PMG1_B1_DRP kit connections.
 
 	**Table 1. Hardware connection for Differential mode (Signed and Unsigned) for PMG1 kit**
 	
@@ -45,17 +53,19 @@ This code example demonstrates the method of using the 12-bit SAR ADC on EZ-PD&t
 	 :-------       | :------------ | :----------     
 	 PMG1-CY7113 | P3.0 (J6.12) | P3.3 (J6.11) 
 	 EVAL_PMG1_B1_DRP | P3.0 (J7.7) | P3.1 (J7.6) 
+	 EVAL_PMG1_S3_DUALDRP | P3.0 (J13.3) | P3.3 (J13.1)
 	
 	<br>
 
-6. Do the following hardware connection for Single-ended mode (Signed and Unsigned). Refer Figure 2 for Single ended input mode connection. The Table 2 shows the kit connections for the PMG1-S3 kit and EVAL_PMG1_B1_DRP kit.
+6. Make the following hardware connection for single-ended mode (signed and unsigned). See **Figure 2** for single-ended input mode connection. **Table 2** shows the kit connections for PMG1-S3 and EVAL_PMG1_B1_DRP kits.
 
 	**Table 2. Hardware connection for Single-ended mode (Signed and Unsigned) for PMG1 kit**
 	
 	 PMG1 prototyping kit  | Input Signal (Vplus) |
-	 :-------       | :------------ 
+	 :-------    | :------------ 
 	 PMG1-CY7113 | P3.0 (J6.12) 
 	 EVAL_PMG1_B1_DRP | P3.0 (J7.7) 
+	 EVAL_PMG1_S3_DUALDRP | P3.0 (J13.3)
 	
 	<br>
 
@@ -72,10 +82,12 @@ See the kit user guide for details on configuring the board.
 
 ## Software setup
 
+See the [ModusToolbox&trade; tools package installation guide](https://www.infineon.com/ModusToolboxInstallguide) for information about installing and configuring the tools package.
+
+
 Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://teratermproject.github.io/index-en.html).
 
 This example requires no additional software or tools.
-
 
 
 ## Using the code example
@@ -131,12 +143,9 @@ Argument | Description | Required/optional
 `--target-dir`| Specify the directory in which the application is to be created if you prefer not to use the default current working directory | Optional
 `--user-app-name`| Specify the name of the application if you prefer to have a name other than the example's default name | Optional
 
-<br>
-
 > **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; tools package user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at {ModusToolbox&trade; install directory}/docs_{version}/mtb_user_guide.pdf).
 
 </details>
-
 
 
 ### Open the project
@@ -189,12 +198,11 @@ For more details, see the [ModusToolbox&trade; tools package user guide](https:/
 </details>
 
 
-
 ## Operation
 
-1. Ensure that the steps listed in the [Hardware setup](#hardware-setup) section are completed.
+1. Complete the steps listed in the [Hardware setup](#hardware-setup) section.
 
-2. For PMG1-CY7113, ensure that the jumper shunt on power selection jumper (J5) is placed at position 2-3 to enable programming mode. Skip this step for EVAL_PMG1_B1_DRP.
+2. For PMG1-CY7113 and EVAL_PMG1_S3_DUALDRP, ensure that the jumper shunt on power selection jumper (J5) is placed at position 2-3 to enable programming mode. Skip this step for EVAL_PMG1_B1_DRP.
 
 3. Connect the board to your PC using the USB cable through the KitProg3 USB connector (J1). This cable is used for programming the PMG1 device.
 
@@ -228,21 +236,24 @@ For more details, see the [ModusToolbox&trade; tools package user guide](https:/
      > **Note:** This application supports only PMG1-CY7113 BSP and EVAL_PMG1_B1_DRP BSP.
    </details>
 
-5. After programming the kit, disconnect the USB cable. Move to the next step for EVAL_PMG1_B1_DRP kit. Change the position on the power selection jumper (J5) to 1-2, to power the kit through the USB PD port (J10) in operational mode for PMG1-CY7113 prototyping kit.
+
+5. After programming the kit, disconnect the USB cable. Move to the next step for EVAL_PMG1_B1_DRP and EVAL_PMG1-S3_DUALDRP kits. Change the position on the power selection jumper (J5) to 1-2, to power the kit through the USB PD port (J10) in operational mode for PMG1-CY7113 prototyping kit.
+
+
 
 6. Reconnect the USB cable to KitProg3 Type-C port (J1).
 
 7. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
-8. For PMG1-CY7113, power the kit through the USB PD port (J10), using the second USB cable. Skip this step for the EVAL_PMG1_B1_DRP kit as it is automatically powered when the kit is connected through the KitProg3 USB Type-C port (J1).
+8. For PMG1-CY7113, power the kit through the USB PD port (J10), using the second USB cable. For EVAL_PMG1_S3_DUALDRP, power the kit through USB PD port(J10 or J14).Skip this step for the EVAL_PMG1_B1_DRP kit as it is automatically powered when the kit is connected through the KitProg3 USB Type-C port (J1).
 
-   As soon as the kit is powered through the USB PD port, the application starts printing "Displaying 12-bit SAR ADC output: DIFFERENTIAL mode - Signed". Consequently, the digital output codes and the corresponding value of the measured analog input voltages are automatically displayed at an interval of 500 milliseconds each.
+   As soon as the kit is powered through the USB PD port, the application starts printing **Displaying 12-bit SAR ADC output: DIFFERENTIAL mode - Signed**. Consequently, the digital output codes and the corresponding value of the measured analog input voltages are automatically displayed at an interval of 500 milliseconds each.
 
 9. Measure the voltage applied to the Vplus/Vminus input of the ADC using a multimeter and compare with the corresponding voltages and digital codes displayed on the serial terminal, using the standard ADC conversion formula:
 
-   Code = (Vin/Vref) * (2^n - 1), where 'n' is the resolution in number of bits used for representing the digital code.
+   Code = (Vin/Vref)*(2^n - 1), where n is the resolution in number of bits used for representing the digital code.
 
-> **Note** The ADC is configured in differential input mode by default. To change the input into single-ended/differential mode and also to choose the resultant output code format as signed/unsigned, see the configuration in the [Design and implementation](#design-and-implementation) section.
+> **Note** The ADC is configured in differential input mode by default. To change the input into single-ended or differential mode and to choose the resultant output code format as signed/unsigned, see the configuration in the [Design and implementation](#design-and-implementation) section.
 
 **Figure 3. UART terminal display of signed and unsigned code format**
 
@@ -261,11 +272,12 @@ For more details, see the [ModusToolbox&trade; tools package user guide](https:/
 
 > **Note:** All input signals should be within the voltage range (0 to VDDIO) with respect to system ground.
 
+
 ## Debugging
 
 <details><summary><b>In Eclipse IDE</b></summary>
 
-Use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. Ensure that the board is connected to your PC using the USB cable through the KitProg3 USB Type-C port (J1). For PMG1-CY7113 Prototyping Kit, ensure the jumper shunt on power selection jumper (J5) is placed at position 1-2.
+Use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. Ensure that the board is connected to your PC using the USB cable through the KitProg3 USB Type-C port (J1). For PMG1-CY7113 and EVAL_PMG1-S3_DUALDRP Prototyping Kits, ensure the jumper shunt on power selection jumper (J5) is placed at position 1-2.
 
 </details>
 
@@ -278,13 +290,14 @@ Follow the instructions in your preferred IDE.
 
 ## Design and implementation
 
-This code example uses the 12-bit SAR ADC provided in the programmable analog block, available on PMG1-S3 and EVAL_PMG1_B1_DRP devices. This ADC can be configured using the Device Configurator tool in ModusToolbox&trade; software.
+This code example uses the 12-bit SAR ADC provided in the programmable analog block, available on PMG1-S3 and EVAL_PMG1_B1_DRP devices. This ADC can be configured using the Device Configurator tool in ModusToolbox&trade;.
 
 PASS0 SARADC0 has three inputs: Vplus, Vminus, and ext_vref. The inputs can be routed to the required external pins using a set of firmware-controlled switches used for analog routing.
 
 PASS 0 12-bit SAR ADC 0 has two input modes: differential mode and single-ended mode. In differential input mode, a differential signal can be applied across the Vplus and Vminus input pins of the ADC. This mode is suitable for reading signals that vary in both positive and negative sides, such as an alternating current (AC) signal. Single-ended input modes are preferred for reading analog direct current (DC) signals. In addition to this, the output code can be displayed in both signed and unsigned formats.
 
-Detailed configuration of PASS 0 12-bit SAR ADC 0 for parameters such as reference voltage, resolution, number of channels, scan rate, channel acquisition time, clock frequency, input mode, result format, interrupts and so on are included in the Device Configurator tool as shown below:
+Detailed configuration of PASS 0 12-bit SAR ADC 0 for parameters such as reference voltage, resolution, number of channels, scan rate, channel acquisition time, clock frequency, input mode, result format, interrupts and more are included in the Device Configurator tool as shown below:
+
 
 ### PASS 0 12-bit SAR ADC 0 configuration
 
@@ -298,19 +311,19 @@ Detailed configuration of PASS 0 12-bit SAR ADC 0 for parameters such as referen
 
 3. On the Device Configurator, select **PASS 0 12-bit SAR ADC 0** under **Programmable Analog (PASS) 0** in **Peripherals** tab. This opens the ADC configuration fields, and make the following changes:
 
-   1. In the **Channel 0** section, select input modes as 'Differential' or 'Single-ended'.
+   1. In the **Channel 0** section, select input modes as **Differential** or **Single-ended**.
 
-   2. Under **Sampling** section, select the output result formats as 'Signed' or 'Unsigned'.
+   2. Under the **Sampling** section, select the output result formats as **Signed** or **Unsigned**.
 
-   3. Change other parameters to modify the performance of ADC per the application requirements.
+   3. Change other parameters to modify the performance of ADC as per the application requirements.
 
-     > **Note:** If you make any changes on the Device Configurator save the changes and then re-program the kit to activate the new configuration.
+     > **Note:** If you make any changes on the Device Configurator, save the changes and then reprogram the kit to activate the new configuration.
 
       **Figure 5. PASS 0 12-bit SAR ADC 0 configuration using Device Configurator**
 
       <img src = "images/saradc-configuration-2.png" width = "1000"/>
 
-   Some of the important parameters that are responsible for the performance of PASS 0 12-bit SAR ADC 0 are listed below:
+   Some of the important parameters responsible for the performance of PASS 0 12-bit SAR ADC 0 are listed below:
 
    1. To get the maximum resolution, choose **Internal BangGap Reference** as to 1.2 V, which is the lowest value of reference voltage (Vref).
 
@@ -324,7 +337,7 @@ Detailed configuration of PASS 0 12-bit SAR ADC 0 for parameters such as referen
 
    5. Set **Samples Averaged** to **256** to minimize the effect of noise and other errors. This results in averaging out 256 samples from a particular channel, in a single scan, to generate the final ADC output code value.
 
-   6. For a fixed clock frequency, **Achieved Free-Run Scan Rate (sps)** depends on **Target Scan Rate (sps)**, **Minimum Acquisition Time (ns)** and **Sampled Averaged**. See the 'Scan Rate' section in the [SAR ADC PDL API Reference](https://infineon.github.io/mtb-pdl-cat2/pdl_api_reference_manual/html/group__group__sar.html). Note that the achieved scan duration is 2.304 milliseconds for an acquisition time of 562 nanoseconds.
+   6. For a fixed clock frequency, **Achieved Free-Run Scan Rate (sps)** depends on **Target Scan Rate (sps)**, **Minimum Acquisition Time (ns)** and **Sampled Averaged**. See the Scan Rate section in the [SAR ADC PDL API Reference](https://infineon.github.io/mtb-pdl-cat2/pdl_api_reference_manual/html/group__group__sar.html). Note that the achieved scan duration is 2.304 milliseconds for an acquisition time of 562 nanoseconds.
 
   > **Note:** By default, the ADC is configured for **differential input**, with **signed output code format**. To modify the configuration between single-ended/differential input mode and signed/unsigned output code format, see [Differential mode](#differential-mode) and [Single-ended mode](#single-ended-mode).
 
@@ -334,13 +347,17 @@ Detailed configuration of PASS 0 12-bit SAR ADC 0 for parameters such as referen
 
    <img src = "images/analog-routing.png" width = "800"/>
 
-> **Note:** For PMG1-S3 kit , port-2 pins are reserved for connecting directly to PASS 0 12-bit SAR ADC 0 on PMG1-S3 devices. But in this example, port-2 pins cannot be used as they are wired onto other peripherals, in CY7113 prototyping kits. Therefore, in this example, connection to Vplus and Vminus are routed to other pins through AMUXBUSA/B as described in the **Info** tab in the **Notice List**.
+
+> **Note:** For PMG1-S3 kit , port-2 pins are reserved for connecting directly to PASS 0 12-bit SAR ADC 0 on PMG1-S3 devices. But in this example, port-2 pins cannot be used as they are wired onto other peripherals, in CY7113 and EVAL_PMG1_S3_DUALDRP prototyping kits. Therefore, in this example, connection to Vplus and Vminus are routed to other pins through AMUXBUSA/B for CY7113 and EVAL_PMG1_S3_DUALDRP as described in the **Info** tab in the **Notice List**.
+
+
    
    **Figure 7. Analog routing in Device Configurator for EVAL_PMG1_B1_DRP**
 
    <img src = "images/analog-routing-pmg1b1.png" width = "400"/>
 
-> **Note:** For PMG1-B1 kit , port-1 pins are reserved for connecting direclty to PASS 0 12-bit SAR ADC 0 on PMG1-B1 devices. But in this example, port-1 pins cannot be used as they are wired onto other peripherals, in EVAL_PMG1_B1_DRP prototyping kits. Therefore, in this example, connection to Vplus and Vminus are routed to other pins through AMUXBUSA/B as described in the **Info** tab in the **Notice List**.
+> **Note:** For PMG1-B1 kit , port 1 pins are reserved for connecting direclty to PASS 0 12-bit SAR ADC 0 on PMG1-B1 devices. But in this example, port 1 pins cannot be used as they are wired onto other peripherals, in EVAL_PMG1_B1_DRP prototyping kits. Therefore, in this example, connection to Vplus and Vminus are routed to other pins through AMUXBUSA/B, as described in the **Info** tab in the **Notice List**.
+
 
 #### Differential mode (default)
 
@@ -352,9 +369,9 @@ In signed output code format (default), the differential code range in decimal v
 
 <img src = "images/diff-signed.png" width = "600"/>
 
-The code -2048 corresponds to the Vminus input equal to Vref (1.2 V) and Vplus input at ground (0 V). Similarly, code 2047 corresponds to the Vplus input equal to Vref (1.2 V) and Vminus input at ground (0 V). This can be achieved by interchanging the potentiometer input connection and the ground connection between the Vplus and Vminus pins of the ADC. For PMG1-S3 kit, Vplus pin is J6.11 and Vminus pin is J6.12, and for EVAL_PMG1_B1_DRP kit, Vplus pin is J7.7 and Vminus pin is J7.6.
+The code -2048 corresponds to the Vminus input equal to Vref (1.2 V) and Vplus input at ground (0 V). Similarly, code 2047 corresponds to the Vplus input equal to Vref (1.2 V) and Vminus input at ground (0 V). This can be achieved by interchanging the potentiometer input connection and the ground connection between the Vplus and Vminus pins of the ADC. For PMG1-S3 kit, Vplus pin is J6.11 and Vminus pin is J6.12, for EVAL_PMG1_B1_DRP kit, Vplus pin is J7.7 and Vminus pin is J7.6, and for EVAL_PMG1-S3_DUALDRP kit, Vplus pin is J13.3 and Vminus pin is J13.1.
 
-Differential result format can be changed to 'Unsigned' under **Sampling** section. In unsigned output code format, the differential code range in decimal value varies from 0 (0x000) to 4095 (0xFFF), giving a total of 4095 codes as follows:
+Differential result format can be changed to **Unsigned** under the **Sampling** section. In unsigned output code format, the differential code range in decimal value varies from 0 (0x000) to 4095 (0xFFF), giving a total of 4095 codes as follows:
 
 **Figure 8. Differential input - unsigned output code**
 
@@ -365,13 +382,13 @@ The code 0 corresponds to the Vminus input equal to Vref (1.2 V) and Vplus input
 
 #### Single-ended mode
 
-To change the ADC input mode from 'Differential' to 'Single-ended', navigate to the **Channel 0** tab in **PASS 0 12-bit SAR ADC 0** and change the **Input Mode** to **Single-ended**. Note that for single-ended mode, the connection to the Vminus input pin of the ADC must be removed as notified in the **Task** tab under the **Notice List**.
+To change the ADC input mode from Differential to Single-ended, navigate to the **Channel 0** tab in **PASS 0 12-bit SAR ADC 0** and change the **Input Mode** to **Single-ended**. Note that for single-ended mode, the connection to the Vminus input pin of the ADC must be removed as notified in the **Task** tab under the **Notice List**.
 
 In single-ended input mode, an analog signal is applied to the Vplus input of the PASS 0 12-bit SAR ADC 0 with the Vneg pin connected internally to either of the three options: VSSA, Vref, or Routed.
 
-In this example, Vneg is connected to **Vref** (1.2 V), under **Connections** in **PASS 0 12-bit SAR ADC 0**. Note that other values for reference signals such as VDDA or VDDA/2 or reference voltage from an external pin may also be used according to application requirements.
+In this example, Vneg is connected to **Vref** (1.2 V) under **Connections** in **PASS 0 12-bit SAR ADC 0**. Note that other values for reference signals such as VDDA or VDDA/2 or reference voltage from an external pin may also be used according to application requirements.
 
-In signed output code format (default), the single-ended code range in decimal value varies from -2048 (0x800) to 2047 (0x7FF), giving a total of 4095 digital codes as shown in the figure below.
+In signed output code format (default), the single-ended code range in decimal value varies from -2048 (0x800) to 2047 (0x7FF), giving a total of 4095 digital codes as shown in the following figure.
 
 **Figure 9. Single-ended input - signed output code**
 
@@ -379,7 +396,7 @@ In signed output code format (default), the single-ended code range in decimal v
 
 The code -2048 corresponds to the Vplus input at 0 V. Similarly, the code 2047 corresponds to the Vplus input equal to 2*Vref (2.4 V). Note that the potentiometer is powered from 3.3 V. Therefore, a full rotation of the potentiometer provides 3.3 V at the Vplus input of the ADC.
 
-Single-ended result format can be changed to 'Unsigned' under **Sampling**. In the unsigned output code format, the single-ended code range in decimal value varies from 0 (0x000) to 4095 (0xFFF), giving a total of 4095 digital codes as follows:
+Single-ended result format can be changed to **Unsigned** under **Sampling**. In the unsigned output code format, the single-ended code range in decimal value varies from 0 (0x000) to 4095 (0xFFF), giving a total of 4095 digital codes as follows:
 
 **Figure 10. Single-ended input - unsigned output code**
 
@@ -389,7 +406,7 @@ The code 0 corresponds to the Vplus input at 0 V. Similarly, the code 4095 corre
 
 Note that the maximum voltage swing across Vplus and Vneg pin that the ADC can read is equal to Vref.
 
-It implies that | Vplus - Vneg | <= Vref
+It implies | Vplus - Vneg | <= Vref
 
 
 **Figure 11. Firmware flowchart**
@@ -398,41 +415,48 @@ It implies that | Vplus - Vneg | <= Vref
 
 > **Note:** This ADC configuration results in a sample conversion delay of 2.304 milliseconds (scan duration) after triggering. This time interval may be effectively utilized to run codes to perform some user-defined tasks. However, a delay of 500 milliseconds has been allotted between each ADC sample display to slow down the UART terminal display rate for a better visibility.
 
+
 ### Compile-time configurations
 
-The EZ-PD&trade; PMG1 MCU 12-bit SAR ADC basic application functionality can be customized through the compile-time parameter that can be turned ON/OFF through the *main.c* file.
+The EZ-PD&trade; PMG1 MCU 12-bit SAR ADC basic application functionality can be customized through the compile-time parameter that can be turned ON or OFF through the *main.c* file.
 
- Macro name          | Description                           | Allowed values
- :------------------ | :------------------------------------ | :-------------
- `DEBUG_PRINT`     | Debug print macro to enable UART print | 1u to enable <br> 0u to disable |
+ Macro name       | Description          | Allowed values
+ :--------------- | :----------------    | :-----------
+ `DEBUG_PRINT`    | Debug print macro to enable UART print | 1u to enable <br> 0u to disable
 
 <br>
+
 
 ### Resources and settings
 
 **Table 4. Application resources**
 
-| Resource  |  Alias/object     |    Purpose     |
-| :------- | :------------    | :------------ |
-| Programmable Analog (PASS) 0    	| PASS 0 12-bit SAR ADC 0       	| 12-bit SAR ADC is used to convert analog input voltage to digital codes|
-| SCB (PDL)			| CYBSP_UART			 	| UART SCB block is used for serial communication, to send ADC code values through serial port|
+ Resource  |  Alias/object     |    Purpose
+ :-------- | :-------------    | :------------
+ Programmable Analog (PASS) 0    | PASS 0 12-bit SAR ADC 0    | 12-bit SAR ADC is used to convert analog input voltage to digital codes
+ SCB (PDL)	| CYBSP_UART    | UART SCB block is used for serial communication, to send ADC code values through serial port
 
 <br>
+
 
 ## Related resources
 
 Resources | Links
 -----------|------------------
-Application notes |[AN232553](https://www.infineon.com/AN232553) – Getting started with EZ-PD&trade; PMG1 MCU on ModusToolbox&trade; software <br> [AN232565](https://www.infineon.com/an232565) – EZ-PD&trade; PMG1 hardware design guidelines and checklist <br> [AN238945](https://www.infineon.com/AN238945) – Getting started with EZ-PD&trade; PMG1-B1 MCU using ModusToolbox&trade;
-Code examples  | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
+Application notes | [AN232553](https://www.infineon.com/AN232553) – Getting started with EZ-PD&trade; PMG1 MCU on ModusToolbox&trade; <br> [AN232565](https://www.infineon.com/an232565) – EZ-PD&trade; PMG1 hardware design guidelines and checklist <br> [AN238945](https://www.infineon.com/AN238945) – Getting started with EZ-PD&trade; PMG1-B1 MCU using ModusToolbox&trade;
+Code examples  | [Using ModusToolbox&trade;](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
 Device documentation | [EZ-PD&trade; PMG1 MCU datasheets](https://www.infineon.com/PMG1DS)
 Development kits | Select your kits from the [Evaluation Board Finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board) page.
-Libraries on GitHub | [mtb-pdl-cat2](https://github.com/Infineon/mtb-pdl-cat2) – Peripheral driver library (PDL) and docs
+Libraries on GitHub | [mtb-pdl-cat2](https://github.com/Infineon/mtb-pdl-cat2) – Peripheral Driver Library (PDL)
 Tools  | [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use libraries and tools enabling rapid development with Infineon MCUs for applications ranging from wireless and cloud-connected systems, edge AI/ML, embedded sense and control, to wired USB connectivity using PSoC&trade; Industrial/IoT MCUs, AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices, XMC&trade; Industrial MCUs, and EZ-USB&trade;/EZ-PD&trade; wired connectivity controllers. ModusToolbox&trade; incorporates a comprehensive set of BSPs, HAL, libraries, configuration tools, and provides support for industry-standard IDEs to fast-track your embedded application development.
+
+<br>
+
 
 ## Other resources
 
 Infineon provides a wealth of data at [www.infineon.com](https://www.infineon.com) to help you select the right device, and quickly and effectively integrate it into your design.
+
 
 ## Document history
 
@@ -443,8 +467,11 @@ Document title: *CE234649* – *EZ-PD&trade; PMG1 MCU: 12-bit SAR ADC basic*
  1.0.0   | New code example      
  2.0.0   | Major update to support ModusToolbox&trade; v3.0. This version is not backward compatible with previous versions of ModusToolbox&trade; 
  2.1.0   | Update to support EVAL_PMG1_B1_DRP kit 
+ 2.2.0   | Update to support EVAL_PMG1_S3_DUALDRP
 ------
+
 <br>
+
 
 All referenced product or service names and trademarks are the property of their respective owners.
 
